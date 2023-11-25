@@ -91,7 +91,7 @@ static inline int fprintz_(FILE * _Stream, const char * file_name, size_t line_n
 
 #endif // PRINTZ_H_
 
-#ifdef PRINTZ_IMPLEMENTATION 
+#ifdef ZPRINTZ_IMPLEMENTATION 
 
 static inline int fprintz_char(FILE * _Stream, const char c){
 

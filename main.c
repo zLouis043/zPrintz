@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-#define PRINTZ_IMPLEMENTATION 
-#include "src/printz.h"
+#define ZPRINTZ_IMPLEMENTATION 
+#include "src/zprintz.h"
 
 int main(void){
 
