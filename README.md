@@ -2,8 +2,8 @@
  A simple library that contains a custom printf for C with new format arguments
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![GitHub last commit (branch)](https://img.shields.io/github/last-commit/zLouis043/zzprintz/main)
-![GitHub top language](https://img.shields.io/github/languages/top/zLouis043/zzprintz)
+![GitHub last commit (branch)](https://img.shields.io/github/last-commit/zLouis043/zPrintz/main)
+![GitHub top language](https://img.shields.io/github/languages/top/zLouis043/zPrintz)
 
 ## How-To
 Just include the header file your project and define its implementation: 
