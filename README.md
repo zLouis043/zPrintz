@@ -10,8 +10,8 @@ Just include the header file your project and define its implementation:
 
 ```c
 
-#define Zzprintz_IMPLEMENTATION
-#include "zzprintz.h"
+#define ZPRINTZ_IMPLEMENTATION
+#include "zprintz.h"
 
 ```
 
@@ -31,8 +31,8 @@ $ ./bar.bat
 
 #include <stdio.h>
 
-#define Zzprintz_IMPLEMENTATION
-#include "src/zzprintz.h"
+#define ZPRINTZ_IMPLEMENTATION
+#include "src/zprintz.h"
 
 int main(void){
 
