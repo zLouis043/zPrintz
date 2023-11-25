@@ -1,4 +1,4 @@
-# zzprintz
+# zPrintz
  A simple library that contains a custom printf for C with new format arguments
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
