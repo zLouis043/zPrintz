@@ -1,0 +1,11 @@
+{
+    "cSpell.words": [
+        "fprintz",
+        "printz"
+    ],
+    "files.associations": {
+        "printz.h": "c",
+        "stdbool.h": "c",
+        "stdio.h": "c"
+    }
+}
