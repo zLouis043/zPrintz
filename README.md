@@ -31,8 +31,8 @@ $ ./bar.bat
 
 #include <stdio.h>
 
-#define ZMATH_IMPLEMENTATION
-#include "src/zmath/zmath.h"
+#define ZPRINTZ_IMPLEMENTATION
+#include "src/zprintz.h"
 
 int main(void){
 
