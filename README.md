@@ -38,6 +38,7 @@ int main(void){
 
   zprintz("{green}Decimal Z{white}: {yellow}{d}{white}\n", 10);
 
+  return 0;
 }
 
 Output > Decimal Z : 10
