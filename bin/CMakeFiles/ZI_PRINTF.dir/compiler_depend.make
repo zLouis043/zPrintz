@@ -263,7 +263,7 @@ CMakeFiles/ZI_PRINTF.dir/main.c.obj: D:/ZI_PRINTF/zPrintz/main.c \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xsaveoptintrin.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xsavesintrin.h \
   C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xtestintrin.h \
-  D:/ZI_PRINTF/zPrintz/src/printz.h
+  D:/ZI_PRINTF/zPrintz/src/zprintz.h
 
 
 C:/msys64/mingw64/include/ioapiset.h:
@@ -790,4 +790,4 @@ C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xsaveoptintrin.h:
 
 C:/msys64/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xsavesintrin.h:
 
-D:/ZI_PRINTF/zPrintz/src/printz.h:
+D:/ZI_PRINTF/zPrintz/src/zprintz.h:

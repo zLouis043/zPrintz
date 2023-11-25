@@ -1,5 +1,5 @@
-#ifndef PRINTZ_H_
-#define PRINTZ_H_
+#ifndef ZPRINTZ_H_
+#define ZPRINTZ_H_
 
 #include <stdarg.h>
 #include <windows.h>
@@ -19,19 +19,20 @@
 #define ANSI_COLOR_CYAN    "\x1b[0;36m"
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
+
 /*!
     @param _Stream The output stream where to write the character
     @param c The character to write
     @return The number of characters written
 */
-static inline int fprintz_char(FILE * _Stream, const char c);
+static inline int fzprintz_char(FILE * _Stream, const char c);
 
 /*!
     @param _Stream The output stream where to write the character
     @param str The str to write
     @return The number of characters written
 */
-static inline int fprintz_string(FILE * _Stream, const char * str);
+static inline int fzprintz_string(FILE * _Stream, const char * str);
 
 /*!
     @param _Stream The output stream where to write the character
@@ -39,7 +40,7 @@ static inline int fprintz_string(FILE * _Stream, const char * str);
     @param base The base of the number to write
     @return The number of characters written
 */
-static inline int fprintz_digit(FILE * _Stream, long digit, int base);
+static inline int fzprintz_digit(FILE * _Stream, long digit, int base);
 
 /*!
     @param _Stream The output stream where to write the character
@@ -47,7 +48,7 @@ static inline int fprintz_digit(FILE * _Stream, long digit, int base);
     @param ap The argument to consider
     @return The number of characters written
 */
-static inline int fprintz_fmt(FILE * _Stream, const char specifier, va_list ap);
+static inline int fzprintz_fmt(FILE * _Stream, const char specifier, va_list ap);
 
 /*!
     @param _Stream The output stream where to write the character
@@ -56,7 +57,7 @@ static inline int fprintz_fmt(FILE * _Stream, const char specifier, va_list ap);
     @param fmt The string to format
     @return The number of characters written
 */
-static inline int fprintz_color(FILE * _Stream, const char * color, const char * color_name, const char ** fmt);
+static inline int fzprintz_color(FILE * _Stream, const char * color, const char * color_name, const char ** fmt);
 
 /*!
     @param _Stream The output stream where to write the character
@@ -64,7 +65,7 @@ static inline int fprintz_color(FILE * _Stream, const char * color, const char *
     @param order The order of precision 
     @return The number of characters written
 */
-static inline int fprintz_rational(FILE * _Stream, double num, size_t order);
+static inline int fzprintz_rational(FILE * _Stream, double num, size_t order);
 
 /*!
     @param _Stream The output stream where to write the character
@@ -74,32 +75,32 @@ static inline int fprintz_rational(FILE * _Stream, double num, size_t order);
     @param ... The variadic arguments in the function call
     @return The number of characters written
 */
-static inline int fprintz_(FILE * _Stream, const char * file_name, size_t line_number,  const char * fmt, ...);
+static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_number,  const char * fmt, ...);
 
 /*!
     @param ... The string to format and print 
     @return The number of characters written
 */
-#define printz(...) fprintz_(stdout, __FILE__, __LINE__ ,"" __VA_ARGS__)
+#define zprintz(...) fzprintz_(stdout, __FILE__, __LINE__ ,"" __VA_ARGS__)
 
 /*! 
     @param _Stream The output stream where to write the character
     @param ... The string to format and print 
     @return The number of characters written
 */
-#define fprintz(_Stream, ...) fprintz_(_Stream, __FILE__, __LINE__ ,"" __VA_ARGS__)
+#define fzprintz(_Stream, ...) fzprintz_(_Stream, __FILE__, __LINE__ ,"" __VA_ARGS__)
 
-#endif // PRINTZ_H_
+#endif // ZPRINTZ_H_
 
 #ifdef ZPRINTZ_IMPLEMENTATION 
 
-static inline int fprintz_char(FILE * _Stream, const char c){
+static inline int fzprintz_char(FILE * _Stream, const char c){
 
     return fwrite(&c, 1, 1, _Stream);
 
 }
 
-static inline int fprintz_string(FILE * _Stream, const char * str){
+static inline int fzprintz_string(FILE * _Stream, const char * str){
 
     int count = 0;
 
@@ -109,7 +110,7 @@ static inline int fprintz_string(FILE * _Stream, const char * str){
 
 }
 
-static inline int fprintz_digit(FILE * _Stream, long digit, int base){
+static inline int fzprintz_digit(FILE * _Stream, long digit, int base){
 
     int count = 0;
 
@@ -117,18 +118,18 @@ static inline int fprintz_digit(FILE * _Stream, long digit, int base){
 
     if(digit < 0){
         fwrite("-", 1, 1, _Stream);
-        return fprintz_digit(_Stream, -digit, base) + 1;
+        return fzprintz_digit(_Stream, -digit, base) + 1;
     }else if(digit < base){
-        return fprintz_char(_Stream, digits[digit]);
+        return fzprintz_char(_Stream, digits[digit]);
     }else {
-        count = fprintz_digit(_Stream, digit / base, base);
-        return count + fprintz_digit(_Stream, digit % base, base);
+        count = fzprintz_digit(_Stream, digit / base, base);
+        return count + fzprintz_digit(_Stream, digit % base, base);
     }
 
 }
 
 
-static inline int fprintz_float(FILE * _Stream, double value){
+static inline int fzprintz_float(FILE * _Stream, double value){
 
     int count = 0;
 
@@ -147,7 +148,7 @@ static inline int fprintz_float(FILE * _Stream, double value){
     Convert a float to a rationalized string. 
     Function inspired from https://github.com/kevinboone/rationalize
 */
-static inline int fprintz_rational(FILE * _Stream, double num, size_t order){
+static inline int fzprintz_rational(FILE * _Stream, double num, size_t order){
 
     int whole; 
     bool negative;
@@ -263,26 +264,26 @@ static inline int fprintz_rational(FILE * _Stream, double num, size_t order){
     return count;
 }
 
-static inline int fprintz_fmt(FILE * _Stream, const char specifier, va_list ap){
+static inline int fzprintz_fmt(FILE * _Stream, const char specifier, va_list ap){
 
     int count = 0;
 
     if(specifier == 'c' || specifier == 'C'){
-        count = fprintz_char(_Stream, va_arg(ap, int));
+        count = fzprintz_char(_Stream, va_arg(ap, int));
     }else if(specifier == 's' || specifier == 'S'){
-        count = fprintz_string(_Stream, va_arg(ap, char *));
+        count = fzprintz_string(_Stream, va_arg(ap, char *));
     }else if(specifier == 'd' || specifier == 'D'){
-        count = fprintz_digit(_Stream, (long)va_arg(ap, int), 10);
+        count = fzprintz_digit(_Stream, (long)va_arg(ap, int), 10);
     }else if(specifier == 'x' || specifier == 'X'){
-        count = fprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 16);
+        count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 16);
     }else if(specifier == 'o' || specifier == 'O'){
-        count = fprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 8);
+        count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 8);
     }else if(specifier == 'b' || specifier == 'B'){
-        count = fprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 2);
+        count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 2);
     }else if(specifier == 'f' || specifier == 'F'){
-        count += fprintz_float(_Stream, (double)va_arg(ap, double));
+        count += fzprintz_float(_Stream, (double)va_arg(ap, double));
     }else if(specifier == 'q' || specifier == 'Q'){
-        count += fprintz_rational(_Stream, (double)va_arg(ap, double), 10);
+        count += fzprintz_rational(_Stream, (double)va_arg(ap, double), 10);
     }else {
         count += fwrite(&specifier, 1, 1, _Stream);
     }
@@ -291,7 +292,7 @@ static inline int fprintz_fmt(FILE * _Stream, const char specifier, va_list ap){
 
 }
 
-static inline int fprintz_color(FILE * _Stream, const char * color, const char * color_name, const char ** fmt){
+static inline int fzprintz_color(FILE * _Stream, const char * color, const char * color_name, const char ** fmt){
 
     int color_len = strlen(color);
     int color_name_len = strlen(color_name);
@@ -302,7 +303,7 @@ static inline int fprintz_color(FILE * _Stream, const char * color, const char *
     return count;
 }
 
-static inline int fprintz_(FILE * _Stream, const char * file_name, size_t line_number, const char * fmt, ...){
+static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_number, const char * fmt, ...){
     
     va_list ap;
 
@@ -323,21 +324,21 @@ static inline int fprintz_(FILE * _Stream, const char * file_name, size_t line_n
             fmt++;
 
             if(strncmp(fmt, "RED", 3) == 0 || strncmp(fmt, "red", 3) == 0){
-                count += fprintz_color(_Stream, ANSI_COLOR_RED, "RED", &fmt);
+                count += fzprintz_color(_Stream, ANSI_COLOR_RED, "RED", &fmt);
             }else if(strncmp(fmt, "GREEN", 6) == 0 || strncmp(fmt, "green", 5) == 0){
-                count += fprintz_color(_Stream, ANSI_COLOR_GREEN, "GREEN", &fmt);
+                count += fzprintz_color(_Stream, ANSI_COLOR_GREEN, "GREEN", &fmt);
             }else if(strncmp(fmt, "YELLOW", 6) == 0 || strncmp(fmt, "yellow", 6) == 0){
-                count += fprintz_color(_Stream, ANSI_COLOR_YELLOW, "YELLOW", &fmt);
+                count += fzprintz_color(_Stream, ANSI_COLOR_YELLOW, "YELLOW", &fmt);
             }else if(strncmp(fmt, "BLUE", 4) == 0 || strncmp(fmt, "blue", 4) == 0){
-                count += fprintz_color(_Stream, ANSI_COLOR_BLUE, "YELLOW", &fmt);
+                count += fzprintz_color(_Stream, ANSI_COLOR_BLUE, "YELLOW", &fmt);
             }else if(strncmp(fmt, "MAGENTA", 7) == 0 || strncmp(fmt, "magenta", 7) == 0){
-                count += fprintz_color(_Stream, ANSI_COLOR_MAGENTA, "YELLOW", &fmt);
+                count += fzprintz_color(_Stream, ANSI_COLOR_MAGENTA, "YELLOW", &fmt);
             }else if(strncmp(fmt, "CYAN", 4) == 0 || strncmp(fmt, "cyan", 4) == 0){
-                count += fprintz_color(_Stream, ANSI_COLOR_CYAN, "CYAN", &fmt);
+                count += fzprintz_color(_Stream, ANSI_COLOR_CYAN, "CYAN", &fmt);
             }else if(strncmp(fmt, "WHITE", 5) == 0 || strncmp(fmt, "white", 5) == 0){
-                count += fprintz_color(_Stream, ANSI_COLOR_RESET, "WHITE", &fmt);
+                count += fzprintz_color(_Stream, ANSI_COLOR_RESET, "WHITE", &fmt);
             }else {
-                count += fprintz_fmt(_Stream, *fmt, ap);
+                count += fzprintz_fmt(_Stream, *fmt, ap);
                 fmt++;
             }
 
@@ -360,4 +361,4 @@ static inline int fprintz_(FILE * _Stream, const char * file_name, size_t line_n
 
 }
 
-#endif // PRINTZ_IMPLEMENTATION 
+#endif // ZPRINTZ_IMPLEMENTATION 
