@@ -296,6 +296,12 @@ static inline int fzprintz_rational(FILE * _Stream, double num, size_t order){
 
 static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifier, va_list ap){
 
+    #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+    const char *prefix = "0x";
+    #elif _WIN32
+    const char *prefix = "0000";
+    #endif 
+
     int count = 0;
 
     if(specifier == 'c' || specifier == 'C'){
@@ -362,14 +368,17 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
                 for(int i = 0; i < -padding; i++){
                     count += fwrite(" ", 1, 1, _Stream);
                 }
-                count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 16);
+                count += fwrite("0x", 1, 2, _Stream);
+                count += fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 16);
             }else{
-                count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 16);
+                count += fwrite("0x", 1, 2, _Stream);
+                count += fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 16);
                 for(int i = 0; i < padding; i++){
                     count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
+            count += fwrite("0x", 1, 2, _Stream);
             count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 16);
         }
 
@@ -451,12 +460,6 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
 
         //count += fzprintz_rational(_Stream, (double)va_arg(ap, double), 10);
     }else if(specifier == 'p' || specifier == 'P'){
-
-        #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
-        const char *prefix = "0x";
-        #elif _WIN32
-        const char *prefix = "0000";
-        #endif 
 
         void *p = va_arg(ap, void *);
 

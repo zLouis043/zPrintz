@@ -48,7 +48,7 @@ int main(void){
    count = zprintz("{green}Pointer Z{white}: {yellow}{p}{white}\n", p);
    zprintz("{green}Count{white} : {yellow}{d}{white}\n", count);
 
-   count = printf("Pointer F: %-20p\n", p);
+   count = printf("Pointer F: %p\n", p);
    printf("Count : %d\n", count);
    
    count = zprintz("{green}Char Z{white}: {yellow}{c}{white}\n", 'c');
