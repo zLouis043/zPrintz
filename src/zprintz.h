@@ -48,7 +48,7 @@ static inline int fzprintz_digit(FILE * _Stream, long digit, int base);
     @param ap The argument to consider
     @return The number of characters written
 */
-static inline int fzprintz_fmt(FILE * _Stream, int padding, const char specifier, va_list ap);
+static inline int fzprintz_fmt(FILE * _Stream, int padding, const char specifier, va_list * ap);
 
 /*!
     @param _Stream The output stream where to write the character
@@ -299,15 +299,15 @@ static inline int fzprintz_rational(FILE * _Stream, double num, size_t order){
                                                 for(int i = 0; i < -padding; i++){\
                                                     count += fwrite(" ", 1, 1, _Stream);\
                                                 }\
-                                                count += fun(_Stream, va_arg(ap, type));\
+                                                count += fun(_Stream, va_arg(*ap, type));\
                                             }else{\
-                                                count += fun(_Stream, va_arg(ap, type));\
+                                                count += fun(_Stream, va_arg(*ap, type));\
                                                 for(int i = 0; i < padding; i++){\
                                                     count += fwrite(" ", 1, 1, _Stream);\
                                                 }\
                                             }\
                                         }else {\
-                                            count += fun(_Stream, va_arg(ap, type));\
+                                            count += fun(_Stream, va_arg(*ap, type));\
                                         }
 
 #define fzprinz_cast_padding(fun, cast_type, varg_type) if(padding != 0){   \
@@ -315,15 +315,15 @@ static inline int fzprintz_rational(FILE * _Stream, double num, size_t order){
                                                                     for(int i = 0; i < -padding; i++){\
                                                                         count += fwrite(" ", 1, 1, _Stream);\
                                                                     }\
-                                                                    count += fun(_Stream, (cast_type)va_arg(ap, varg_type));\
+                                                                    count += fun(_Stream, (cast_type)va_arg(*ap, varg_type));\
                                                                 }else{\
-                                                                    count += fun(_Stream, (cast_type)va_arg(ap, varg_type));\
+                                                                    count += fun(_Stream, (cast_type)va_arg(*ap, varg_type));\
                                                                     for(int i = 0; i < padding; i++){\
                                                                         count += fwrite(" ", 1, 1, _Stream);\
                                                                     }\
                                                                 }\
                                                             }else {\
-                                                                count += fun(_Stream, (cast_type)va_arg(ap, varg_type));\
+                                                                count += fun(_Stream, (cast_type)va_arg(*ap, varg_type));\
                                                             }
 
 #define fzprinz_cast_digit_padding(fun, cast_type, varg_type, base) if(padding != 0){   \
@@ -331,18 +331,18 @@ static inline int fzprintz_rational(FILE * _Stream, double num, size_t order){
                                                                     for(int i = 0; i < -padding; i++){\
                                                                         count += fwrite(" ", 1, 1, _Stream);\
                                                                     }\
-                                                                    count += fun(_Stream, (cast_type)va_arg(ap, varg_type), base);\
+                                                                    count += fun(_Stream, (cast_type)va_arg(*ap, varg_type), base);\
                                                                 }else{\
-                                                                    count += fun(_Stream, (cast_type)va_arg(ap, varg_type), base);\
+                                                                    count += fun(_Stream, (cast_type)va_arg(*ap, varg_type), base);\
                                                                     for(int i = 0; i < padding; i++){\
                                                                         count += fwrite(" ", 1, 1, _Stream);\
                                                                     }\
                                                                 }\
                                                             }else {\
-                                                                count += fun(_Stream, (cast_type)va_arg(ap, varg_type), base);\
+                                                                count += fun(_Stream, (cast_type)va_arg(*ap, varg_type), base);\
                                                             }
 
-static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifier, va_list ap){
+static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifier, va_list * ap){
 
     #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
     const char *prefix = "0x";
@@ -405,17 +405,18 @@ static inline int fzprintz_color(FILE * _Stream, const char * color, const char 
     int count = fwrite(color, color_len, 1, _Stream);
     *fmt += color_name_len;
 
-    return count;
+    return color_len;
 }
 
-static inline int fzprintz_color_varg(FILE * _Stream, const char ** fmt, va_list ap){
+static inline int fzprintz_color_varg(FILE * _Stream, const char ** fmt, va_list * ap){
 
-    const char * color = va_arg(ap, char *);
+    const char * color = va_arg(*ap, char *);
+    int color_len = strlen(color);
 
-    int count = fwrite(color, strlen(color), 1, _Stream);
+    int count = fwrite(color, color_len, 1, _Stream);
     *fmt += 5;
 
-    return count;
+    return color_len;
 }
 
 static inline int fzprintz_str_to_num(const char **fmt){
@@ -475,7 +476,7 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
             }else if(strncmp(fmt, "WHITE", 5) == 0 || strncmp(fmt, "white", 5) == 0){
                 count += fzprintz_color(_Stream, ANSI_COLOR_RESET, "WHITE", &fmt);
             }else if(strncmp(fmt, "COLOR", 5) == 0 || strncmp(fmt, "color", 5) == 0){
-                count += fzprintz_color_varg(_Stream, &fmt, ap);
+                count += fzprintz_color_varg(_Stream, &fmt, &ap);
             }else {    
 
                 int padding = 0;
@@ -495,7 +496,7 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
 
                 }
 
-                count += fzprintz_fmt(_Stream, padding ,*fmt, ap);
+                count += fzprintz_fmt(_Stream, padding ,*fmt, &ap);
                 fmt++;
             }
 
