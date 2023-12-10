@@ -42,6 +42,14 @@ int main(void){
 
    count = printf("Binary F: DOES NOT EXIST\n");
    printf("Count : %d\n", count);
+
+   char * p = "ciao";
+
+   count = zprintz("{green}Pointer Z{white}: {yellow}{p}{white}\n", p);
+   zprintz("{green}Count{white} : {yellow}{d}{white}\n", count);
+
+   count = printf("Pointer F: %p\n", p);
+   printf("Count : %d\n", count);
    
    return 0; 
 }

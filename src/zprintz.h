@@ -110,6 +110,32 @@ static inline int fzprintz_string(FILE * _Stream, const char * str){
 
 }
 
+static inline int fzprintz_unsigned_number(FILE * _Stream, uint64_t number, int base){
+
+    int count = 0;
+
+    if(number == 0) return fzprintz_char(_Stream, '0');
+
+    char buffer[17];
+
+    while(number){
+        int digit = number % base;
+        if(digit >= 10){
+            buffer[count++] = 'a' + (digit - 10);
+        }else {
+           buffer[count++] = '0' + digit;
+        }
+
+        number /= base;
+    }
+
+    for(int i = count - 1; i >= 0; i--){
+        fzprintz_char(_Stream, buffer[i]);
+    }
+
+    return count - 1;
+}
+
 static inline int fzprintz_digit(FILE * _Stream, long digit, int base){
 
     int count = 0;
@@ -284,6 +310,17 @@ static inline int fzprintz_fmt(FILE * _Stream, const char specifier, va_list ap)
         count += fzprintz_float(_Stream, (double)va_arg(ap, double));
     }else if(specifier == 'q' || specifier == 'Q'){
         count += fzprintz_rational(_Stream, (double)va_arg(ap, double), 10);
+    }else if(specifier == 'p' || specifier == 'P'){
+
+        #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+        const char *prefix = "0x";
+        #elif _WIN32
+        const char *prefix = "0000";
+        #endif 
+
+        void *p = va_arg(ap, void *);
+        count += fwrite(prefix, 1, strlen(prefix), _Stream);
+        count += fzprintz_unsigned_number(_Stream, (uint64_t)p, 16);
     }else {
         count += fwrite(&specifier, 1, 1, _Stream);
     }
@@ -357,6 +394,9 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
     }
 
     va_end(ap);
+
+    count += fzprintz_color(_Stream, ANSI_COLOR_RESET, "WHITE", &fmt);
+
     return count;
 
 }
