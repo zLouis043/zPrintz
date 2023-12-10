@@ -303,13 +303,13 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         if(padding != 0){   
             if(padding < 0){
                 for(int i = 0; i < -padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
                 count = fzprintz_char(_Stream, va_arg(ap, int));
             }else{
                 count = fzprintz_char(_Stream, va_arg(ap, int));
                 for(int i = 0; i < padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
@@ -322,13 +322,13 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         if(padding != 0){   
             if(padding < 0){
                 for(int i = 0; i < -padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
                 count = fzprintz_string(_Stream, va_arg(ap, char *));
             }else{
                 count = fzprintz_string(_Stream, va_arg(ap, char *));
                 for(int i = 0; i < padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
@@ -341,13 +341,13 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         if(padding != 0){   
             if(padding < 0){
                 for(int i = 0; i < -padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
                 count = fzprintz_digit(_Stream, (long)va_arg(ap, int), 10);
             }else{
                 count = fzprintz_digit(_Stream, (long)va_arg(ap, int), 10);
                 for(int i = 0; i < padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
@@ -360,13 +360,13 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         if(padding != 0){   
             if(padding < 0){
                 for(int i = 0; i < -padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
                 count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 16);
             }else{
                 count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 16);
                 for(int i = 0; i < padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
@@ -379,13 +379,13 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         if(padding != 0){   
             if(padding < 0){
                 for(int i = 0; i < -padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
                 count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 8);
             }else{
                 count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 8);
                 for(int i = 0; i < padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
@@ -398,13 +398,13 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         if(padding != 0){   
             if(padding < 0){
                 for(int i = 0; i < -padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
                 count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 2);
             }else{
                 count = fzprintz_digit(_Stream, (long)va_arg(ap, unsigned int), 2);
                 for(int i = 0; i < padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
@@ -417,13 +417,13 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         if(padding != 0){   
             if(padding < 0){
                 for(int i = 0; i < -padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
                 count += fzprintz_float(_Stream, (double)va_arg(ap, double));
             }else{
                 count += fzprintz_float(_Stream, (double)va_arg(ap, double));
                 for(int i = 0; i < padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
@@ -436,13 +436,13 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         if(padding != 0){   
             if(padding < 0){
                 for(int i = 0; i < -padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
                 count += fzprintz_rational(_Stream, (double)va_arg(ap, double), 10);
             }else{
                 count += fzprintz_rational(_Stream, (double)va_arg(ap, double), 10);
                 for(int i = 0; i < padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
@@ -464,7 +464,7 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         if(padding != 0){   
             if(padding < 0){
                 for(int i = 0; i < -padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
                 count += fwrite(prefix, 1, strlen(prefix), _Stream);
                 count += fzprintz_unsigned_number(_Stream, (uint64_t)p, 16);
@@ -472,7 +472,7 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
                 count += fwrite(prefix, 1, strlen(prefix), _Stream);
                 count += fzprintz_unsigned_number(_Stream, (uint64_t)p, 16);
                 for(int i = 0; i < padding; i++){
-                    count += fwrite("o", 1, 1, _Stream);
+                    count += fwrite(" ", 1, 1, _Stream);
                 }
             }
         }else {
