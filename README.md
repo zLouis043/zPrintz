@@ -48,14 +48,16 @@ Output > Decimal Z : 10
 | Format Argument | What it does |
 |-----------------|--------------|
 |      {d}        | Format specifier for the integers. | 
-|      {x}        | Format specifier for the hexadecimals. | 
+|      {x}        | Format specifier for the hexadecimals. (lower-case) | 
+|      {X}        | Format specifier for the hexadecimals. (upper-case) | 
 |      {o}        | Format specifier for the octals. | 
 |      {b}        | Format specifier for the binary. | 
 |      {f}        | Format specifier for the floats. | 
 |      {r}        | Format specifier for the rational rapresentation for the floats. | 
 |      {c}        | Format specifier for the chars. | 
 |      {s}        | Format specifier for the strings. | 
-|      {p}        | Format specifier for the poiners. | 
+|      {p}        | Format specifier for the poiners. (lower-case) | 
+|      {P}        | Format specifier for the poiners. (upper-case) | 
 |      {color}        | Format specifier for the ANSI colors strings. | 
 
 ## To change the color of the text to print 
