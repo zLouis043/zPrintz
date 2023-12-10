@@ -515,8 +515,6 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
 
     va_end(ap);
 
-    count += fzprintz_color(_Stream, ANSI_COLOR_RESET, "WHITE", &fmt);
-
     return count;
 
 }
