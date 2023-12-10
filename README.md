@@ -56,6 +56,7 @@ Output > Decimal Z : 10
 |      {c}        | Format specifier for the chars. | 
 |      {s}        | Format specifier for the strings. | 
 |      {p}        | Format specifier for the poiners. | 
+|      {color}        | Format specifier for the ANSI colors strings. | 
 
 ## To change the color of the text to print 
 
