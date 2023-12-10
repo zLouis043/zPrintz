@@ -562,12 +562,14 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
                 if(is_a_number(*fmt)){
 
                     padding = fzprintz_str_to_num(&fmt);
+                    count += padding;
 
                 }else if(*fmt == '-'){
 
                     fmt++;
 
                     padding = - fzprintz_str_to_num(&fmt);
+                    count += -padding;
 
                 }
 

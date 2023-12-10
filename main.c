@@ -57,5 +57,11 @@ int main(void){
    count = printf("Char F: %c\n", 'c');
    printf("Count : %d\n", count);
 
+   count = zprintz("{green}String Z{white}: {yellow}{s}{white}\n", "Hello World!");
+   zprintz("{green}Count{white} : {yellow}{d}{white}\n", count);
+
+   count = printf("String F: %s\n", "Hello World!");
+   printf("Count : %d\n", count);
+
    return 0; 
 }
