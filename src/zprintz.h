@@ -390,7 +390,25 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         fzprinz_cast_digit_padding(fzprintz_unsigned_number, uint64_t, void *, 16);
 
     }else {
-        count += fwrite(&specifier, 1, 1, _Stream);
+
+        if(padding != 0){   
+            if(padding < 0){
+                for(int i = 0; i < -padding; i++){
+                    count += fwrite(" ", 1, 1, _Stream);
+                }
+                count += fwrite(&specifier, 1, 1, _Stream);
+            }else{
+                count += fwrite(&specifier, 1, 1, _Stream);
+                for(int i = 0; i < padding; i++){
+                    count += fwrite(" ", 1, 1, _Stream);
+                }
+            }
+        }else {
+            count += fwrite(&specifier, 1, 1, _Stream);
+        }
+
+        
+        //count += fwrite(&specifier, 1, 1, _Stream);
     }
 
     return count;
@@ -437,6 +455,12 @@ static inline int fzprintz_str_to_num(const char **fmt){
     num = atoi(buf);
 
     return num;
+
+}
+
+static inline int fzprintz_varg_to_num(va_list * ap){
+
+    return va_arg(*ap, int);
 
 }
 
@@ -493,6 +517,13 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
 
                     padding = - fzprintz_str_to_num(&fmt);
                     count += -padding;
+
+                }else if(*fmt == '*'){
+                    
+                    fmt++;
+
+                    padding = fzprintz_varg_to_num(&ap);
+                    count += padding;
 
                 }
 
