@@ -55,6 +55,7 @@ Output > Decimal Z : 10
 |      {r}        | Format specifier for the rational rapresentation for the floats. | 
 |      {c}        | Format specifier for the chars. | 
 |      {s}        | Format specifier for the strings. | 
+|      {p}        | Format specifier for the poiners. | 
 
 ## To change the color of the text to print 
 
