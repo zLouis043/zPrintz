@@ -576,7 +576,6 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
             }
 
             if(*fmt != '}'){
-                //printf("Char : %c", *fmt);
                 fprintf(stderr, "\n%s[ERROR]%s: Missing closing '}' in %s%s:%zu%s\n", ANSI_COLOR_RED, ANSI_COLOR_RESET, ANSI_COLOR_YELLOW, file_name, line_number, ANSI_COLOR_RESET);
                 exit(EXIT_FAILURE);
             }
