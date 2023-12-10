@@ -505,7 +505,6 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
 
                 int padding = 0;
 
-
                 if(is_a_number(*fmt)){
 
                     padding = fzprintz_str_to_num(&fmt);
@@ -525,6 +524,18 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
                     padding = fzprintz_varg_to_num(&ap);
                     count += padding;
 
+                }
+
+                if(*fmt == '}'){
+
+                    fmt++;
+                    if(padding < 0) padding *= -1;
+                    for(int i = 0; i < padding; i++) count += fwrite(" ", 1, 1, _Stream);   
+                    continue;
+
+                }else if(!isalpha(*fmt) && *fmt != '}'){
+                    fprintf(stderr, "\n%s[ERROR]%s: Missing closing '}' in %s%s:%zu%s\n", ANSI_COLOR_RED, ANSI_COLOR_RESET, ANSI_COLOR_YELLOW, file_name, line_number, ANSI_COLOR_RESET);
+                    exit(EXIT_FAILURE);
                 }
 
                 count += fzprintz_fmt(_Stream, padding ,*fmt, &ap);
