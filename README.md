@@ -69,6 +69,21 @@ Output > Decimal Z : 10
 | {cyan} | Turn the text cyan |
 | {white} | Turn the text white |
 
+## Padding been added 
+
+When used a format specifier like {d} to add padding you can just add the amount of padding wanted before the specifier.
+Example 
+
+```c
+ zprintz("{green}Decimal Z{white}: {yellow}{10d}{white}\n", 10);
+```
+It will add 10 spaces after the number 10 or
+
+```c
+ zprintz("{green}Decimal Z{white}: {yellow}{-10d}{white}\n", 10);
+```
+It will add 10 spaces before the number 10. 
+
 ### Example
 
 ```c
