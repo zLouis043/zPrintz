@@ -75,15 +75,43 @@ Output > Decimal Z : 10
 When used a format specifier like {d} to add padding you can just add the amount of padding wanted before the specifier.
 Example 
 
+| Padding types | What it does |
+|--------|----------|
+| {paddingformat} | Add a left padding to the formatted string |
+| {-paddingformat} | Add a right padding to the formatted string |
+| {*format} | Add a variable padding from the arguments to the formatted string |
+| {padding} | Add a padding to the string without any specifier |
+| {*} | Add a variable padding to the formatted string without any specifier|
+
 ```c
  zprintz("{green}Decimal Z{white}: {yellow}{10d}{white}\n", 10);
+
+ Output > Decimal Z: 10
 ```
-It will add 10 spaces after the number 10 or
 
 ```c
  zprintz("{green}Decimal Z{white}: {yellow}{-10d}{white}\n", 10);
+
+ Output > Decimal Z:           10
 ```
-It will add 10 spaces before the number 10. 
+
+```c
+ zprintz("{green}Decimal Z{white}: {yellow}{*d}{white}\n", -10, 10);
+
+ Output > Decimal Z:           10
+```
+
+```c
+ zprintz("{green}Decimal Z{white}: {10}{yellow}{d}{white}\n", 10);
+
+ Output > Decimal Z:           10
+```
+
+```c
+ zprintz("{green}Decimal Z{white}: {*}{yellow}{d}{white}\n", -10, 10);
+
+ Output > Decimal Z:           10
+```
 
 ### Example
 
