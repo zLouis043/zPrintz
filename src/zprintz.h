@@ -40,7 +40,7 @@ static inline int fzprintz_string(FILE * _Stream, const char * str);
     @param base The base of the number to write
     @return The number of characters written
 */
-static inline int fzprintz_digit(FILE * _Stream, long digit, int base);
+static inline int fzprintz_digit(FILE * _Stream, long digit, int base, int lower);
 
 /*!
     @param _Stream The output stream where to write the character
@@ -114,7 +114,7 @@ static inline int fzprintz_string(FILE * _Stream, const char * str){
 
 }
 
-static inline int fzprintz_unsigned_number(FILE * _Stream, uint64_t number, int base){
+static inline int fzprintz_unsigned_number(FILE * _Stream, uint64_t number, int base, int lower){
 
     int count = 0;
 
@@ -125,7 +125,7 @@ static inline int fzprintz_unsigned_number(FILE * _Stream, uint64_t number, int 
     while(number){
         int digit = number % base;
         if(digit >= 10){
-            buffer[count++] = 'a' + (digit - 10);
+            buffer[count++] = lower == 1 ? 'a' + (digit - 10) : 'A' + (digit - 10);
         }else {
            buffer[count++] = '0' + digit;
         }
@@ -140,20 +140,23 @@ static inline int fzprintz_unsigned_number(FILE * _Stream, uint64_t number, int 
     return count - 1;
 }
 
-static inline int fzprintz_digit(FILE * _Stream, long digit, int base){
+static inline int fzprintz_digit(FILE * _Stream, long digit, int base, int lower){
 
     int count = 0;
 
-    char digits[] = "0123456789abcdef";
+    char * digits = (char*)malloc(17 * sizeof(char));
+
+    if(lower) digits = "0123456789abcdef";
+    else digits = "0123456789ABCDEF";
 
     if(digit < 0){
         fwrite("-", 1, 1, _Stream);
-        return fzprintz_digit(_Stream, -digit, base) + 1;
+        return fzprintz_digit(_Stream, -digit, base, lower) + 1;
     }else if(digit < base){
         return fzprintz_char(_Stream, digits[digit]);
     }else {
-        count = fzprintz_digit(_Stream, digit / base, base);
-        return count + fzprintz_digit(_Stream, digit % base, base);
+        count = fzprintz_digit(_Stream, digit / base, base, lower);
+        return count + fzprintz_digit(_Stream, digit % base, base, lower);
     }
 
 }
@@ -342,6 +345,22 @@ static inline int fzprintz_rational(FILE * _Stream, double num, size_t order){
                                                                 count += fun(_Stream, (cast_type)va_arg(*ap, varg_type), base);\
                                                             }
 
+#define fzprinz_cast_digit_padding_lu(fun, cast_type, varg_type, base, lower) if(padding != 0){   \
+                                                                if(padding < 0){\
+                                                                    for(int i = 0; i < -padding; i++){\
+                                                                        count += fwrite(" ", 1, 1, _Stream);\
+                                                                    }\
+                                                                    count += fun(_Stream, (cast_type)va_arg(*ap, varg_type), base, lower);\
+                                                                }else{\
+                                                                    count += fun(_Stream, (cast_type)va_arg(*ap, varg_type), base, lower);\
+                                                                    for(int i = 0; i < padding; i++){\
+                                                                        count += fwrite(" ", 1, 1, _Stream);\
+                                                                    }\
+                                                                }\
+                                                            }else {\
+                                                                count += fun(_Stream, (cast_type)va_arg(*ap, varg_type), base, lower);\
+                                                            }
+
 static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifier, va_list * ap){
 
     #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
@@ -362,19 +381,23 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
 
     }else if(specifier == 'd' || specifier == 'D'){
 
-        fzprinz_cast_digit_padding(fzprintz_digit, long, int, 10);
+        fzprinz_cast_digit_padding_lu(fzprintz_digit, long, int, 10, 1);
 
     }else if(specifier == 'x' || specifier == 'X'){
 
-        fzprinz_cast_digit_padding(fzprintz_digit, long, unsigned int, 16);
+        if(specifier == 'X'){
+           fzprinz_cast_digit_padding_lu(fzprintz_digit, long, unsigned int, 16, 0); 
+        }else {
+            fzprinz_cast_digit_padding_lu(fzprintz_digit, long, unsigned int, 16, 1);
+        }
 
     }else if(specifier == 'o' || specifier == 'O'){
 
-        fzprinz_cast_digit_padding(fzprintz_digit, long, unsigned int, 8);
+        fzprinz_cast_digit_padding_lu(fzprintz_digit, long, unsigned int, 8, 1);
 
     }else if(specifier == 'b' || specifier == 'B'){
 
-       fzprinz_cast_digit_padding(fzprintz_digit, long, unsigned int, 2); 
+       fzprinz_cast_digit_padding_lu(fzprintz_digit, long, unsigned int, 2, 1); 
 
     }else if(specifier == 'f' || specifier == 'F'){
 
@@ -387,7 +410,11 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
     }else if(specifier == 'p' || specifier == 'P'){
 
         count += fwrite(prefix, 1, strlen(prefix), _Stream);
-        fzprinz_cast_digit_padding(fzprintz_unsigned_number, uint64_t, void *, 16);
+        if(specifier == 'P'){
+            fzprinz_cast_digit_padding_lu(fzprintz_unsigned_number, uint64_t, void *, 16, 0);
+        }else {
+            fzprinz_cast_digit_padding_lu(fzprintz_unsigned_number, uint64_t, void *, 16, 1);
+        }
 
     }else {
 
@@ -406,9 +433,6 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
         }else {
             count += fwrite(&specifier, 1, 1, _Stream);
         }
-
-        
-        //count += fwrite(&specifier, 1, 1, _Stream);
     }
 
     return count;
