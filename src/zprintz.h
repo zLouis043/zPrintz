@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <math.h>
+#include <errno.h>
 
 #define ANSI_COLOR_RED     "\x1b[0;31m"
 #define ANSI_COLOR_GREEN   "\x1b[0;32m"
@@ -580,6 +581,11 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
     }
 
     va_end(ap);
+
+    if(fflush(_Stream) != 0){
+        fprintf(stderr, "%s[ERROR]%s: Error during logging in %s%s:%zu%s : %zu\n", ANSI_COLOR_RED, ANSI_COLOR_RESET, ANSI_COLOR_YELLOW, file_name, line_number, ANSI_COLOR_RESET, errno);
+        exit(EXIT_FAILURE);  
+    }
 
     return count;
 

@@ -9,7 +9,7 @@ int main(void){
 
    count = zprintz("{green}Decimal Z{white}: {yellow}{d}{white}\n", 10);
    zprintz("{green}Count{white} : {yellow}{d}{white}\n", count);
-
+   
    count = printf("Decimal F: %d\n", 10);
    printf("Count : %d\n", count);
 
