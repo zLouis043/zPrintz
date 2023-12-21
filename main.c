@@ -63,5 +63,7 @@ int main(void){
    count = printf("String F: %s\n", "Hello World!");
    printf("Count : %d\n", count);
 
+   system("pause");
+
    return 0; 
 }

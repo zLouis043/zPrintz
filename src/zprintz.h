@@ -12,13 +12,24 @@
 #include <math.h>
 #include <errno.h>
 
-#define ANSI_COLOR_RED     "\x1b[0;31m"
-#define ANSI_COLOR_GREEN   "\x1b[0;32m"
-#define ANSI_COLOR_YELLOW  "\x1b[0;33m"
-#define ANSI_COLOR_BLUE    "\x1b[0;34m"
-#define ANSI_COLOR_MAGENTA "\x1b[0;35m"
-#define ANSI_COLOR_CYAN    "\x1b[0;36m"
-#define ANSI_COLOR_RESET   "\x1b[0m"
+#if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
+    #define C_Red     "\x1b[0;31m"
+    #define C_Green   "\x1b[0;32m"
+    #define C_Yellow  "\x1b[0;33m"
+    #define C_Blue    "\x1b[0;34m"
+    #define C_Magenta "\x1b[0;35m"
+    #define C_Cyan    "\x1b[0;36m"
+    #define C_White   "\x1b[0m"
+#elif _WIN32         
+    #include <Windows.h>
+    #define C_Blue             "1"           
+    #define C_Green            "2"          
+    #define C_Cyan             "3"           
+    #define C_Red              "4"          
+    #define C_Magenta          "5"                  
+    #define C_White            "7"           
+    #define C_Yellow           "14"
+#endif 
 
 
 /*!
@@ -94,6 +105,12 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
 #endif // ZPRINTZ_H_
 
 #ifdef ZPRINTZ_IMPLEMENTATION 
+
+void set_color(int color)
+{
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),color);
+    return;
+}
 
 static inline int is_a_number(const char c){
     return (c >= '0' && c <= '9');
@@ -442,24 +459,58 @@ static inline int fzprintz_fmt(FILE * _Stream, int padding , const char specifie
 
 static inline int fzprintz_color(FILE * _Stream, const char * color, const char * color_name, const char ** fmt){
 
-    int color_len = strlen(color);
-    int color_name_len = strlen(color_name);
+    #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
 
-    int count = fwrite(color, color_len, 1, _Stream);
-    *fmt += color_name_len;
+        int color_len = strlen(color);
+        int color_name_len = strlen(color_name);
 
-    return color_len;
+        int count = fwrite(color, color_len, 1, _Stream);
+        *fmt += color_name_len;
+
+        return color_len;
+
+    #elif _WIN32    
+
+        int icolor = atoi(color);
+        int color_name_len = strlen(color_name);
+
+        set_color(icolor);
+
+        int count = 1;
+
+        *fmt += color_name_len; 
+        
+        return count;
+
+    #endif 
+
 }
 
 static inline int fzprintz_color_varg(FILE * _Stream, const char ** fmt, va_list * ap){
 
-    const char * color = va_arg(*ap, char *);
-    int color_len = strlen(color);
+    #if defined (__unix__) || (defined (__APPLE__) && defined (__MACH__))
 
-    int count = fwrite(color, color_len, 1, _Stream);
-    *fmt += 5;
+        const char * color = va_arg(*ap, char *);
+        int color_len = strlen(color);
 
-    return color_len;
+        int count = fwrite(color, color_len, 1, _Stream);
+        *fmt += 5;
+
+        return color_len;
+
+    #elif _WIN32 
+
+        int color = va_arg(*ap, int);
+
+        set_color(color);
+
+        int count = 1;
+
+        *fmt += 5;
+
+        return count;
+
+    #endif 
 }
 
 static inline int fzprintz_str_to_num(const char **fmt){
@@ -511,19 +562,19 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
             fmt++;
 
             if(strncmp(fmt, "RED", 3) == 0 || strncmp(fmt, "red", 3) == 0){
-                count += fzprintz_color(_Stream, ANSI_COLOR_RED, "RED", &fmt);
+                count += fzprintz_color(_Stream, C_Red, "RED", &fmt);
             }else if(strncmp(fmt, "GREEN", 6) == 0 || strncmp(fmt, "green", 5) == 0){
-                count += fzprintz_color(_Stream, ANSI_COLOR_GREEN, "GREEN", &fmt);
+                count += fzprintz_color(_Stream, C_Green, "GREEN", &fmt);
             }else if(strncmp(fmt, "YELLOW", 6) == 0 || strncmp(fmt, "yellow", 6) == 0){
-                count += fzprintz_color(_Stream, ANSI_COLOR_YELLOW, "YELLOW", &fmt);
+                count += fzprintz_color(_Stream, C_Yellow, "YELLOW", &fmt);
             }else if(strncmp(fmt, "BLUE", 4) == 0 || strncmp(fmt, "blue", 4) == 0){
-                count += fzprintz_color(_Stream, ANSI_COLOR_BLUE, "YELLOW", &fmt);
+                count += fzprintz_color(_Stream, C_Blue, "YELLOW", &fmt);
             }else if(strncmp(fmt, "MAGENTA", 7) == 0 || strncmp(fmt, "magenta", 7) == 0){
-                count += fzprintz_color(_Stream, ANSI_COLOR_MAGENTA, "YELLOW", &fmt);
+                count += fzprintz_color(_Stream, C_Magenta, "YELLOW", &fmt);
             }else if(strncmp(fmt, "CYAN", 4) == 0 || strncmp(fmt, "cyan", 4) == 0){
-                count += fzprintz_color(_Stream, ANSI_COLOR_CYAN, "CYAN", &fmt);
+                count += fzprintz_color(_Stream, C_Cyan, "CYAN", &fmt);
             }else if(strncmp(fmt, "WHITE", 5) == 0 || strncmp(fmt, "white", 5) == 0){
-                count += fzprintz_color(_Stream, ANSI_COLOR_RESET, "WHITE", &fmt);
+                count += fzprintz_color(_Stream, C_White, "WHITE", &fmt);
             }else if(strncmp(fmt, "COLOR", 5) == 0 || strncmp(fmt, "color", 5) == 0){
                 count += fzprintz_color_varg(_Stream, &fmt, &ap);
             }else {    
@@ -559,7 +610,7 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
                     continue;
 
                 }else if(!isalpha(*fmt) && *fmt != '}'){
-                    fprintf(stderr, "\n%s[ERROR]%s: Missing closing '}' in %s%s:%zu%s\n", ANSI_COLOR_RED, ANSI_COLOR_RESET, ANSI_COLOR_YELLOW, file_name, line_number, ANSI_COLOR_RESET);
+                    fprintf(stderr, "\n%s[ERROR]%s: Missing closing '}' in %s%s:%zu%s\n", C_Red, C_White, C_Yellow, file_name, line_number, C_White);
                     exit(EXIT_FAILURE);
                 }
 
@@ -568,7 +619,7 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
             }
 
             if(*fmt != '}'){
-                fprintf(stderr, "\n%s[ERROR]%s: Missing closing '}' in %s%s:%zu%s\n", ANSI_COLOR_RED, ANSI_COLOR_RESET, ANSI_COLOR_YELLOW, file_name, line_number, ANSI_COLOR_RESET);
+                fprintf(stderr, "\n%s[ERROR]%s: Missing closing '}' in %s%s:%zu%s\n", C_Red, C_White, C_Yellow, file_name, line_number, C_White);
                 exit(EXIT_FAILURE);
             }
 
@@ -583,7 +634,7 @@ static inline int fzprintz_(FILE * _Stream, const char * file_name, size_t line_
     va_end(ap);
 
     if(fflush(_Stream) != 0){
-        fprintf(stderr, "%s[ERROR]%s: Error during logging in %s%s:%zu%s : %zu\n", ANSI_COLOR_RED, ANSI_COLOR_RESET, ANSI_COLOR_YELLOW, file_name, line_number, ANSI_COLOR_RESET, errno);
+        fprintf(stderr, "%s[ERROR]%s: Error during logging in %s%s:%zu%s : %zu\n", C_Red, C_White, C_Yellow, file_name, line_number, C_White, errno);
         exit(EXIT_FAILURE);  
     }
 

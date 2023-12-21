@@ -3,6 +3,7 @@
 
 CMakeFiles/ZI_PRINTF.dir/main.c.obj
  D:/ZI_PRINTF/zPrintz/main.c
+ C:/msys64/mingw64/include/windows.h
  C:/msys64/mingw64/include/_bsd_types.h
  C:/msys64/mingw64/include/_mingw.h
  C:/msys64/mingw64/include/_mingw_mac.h
